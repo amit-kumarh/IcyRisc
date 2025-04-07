@@ -1,4 +1,5 @@
-module programCounter #(
+module program_counter #(
+    parameter PROGRAM_START = 9'h100
 ) (
     input logic reset,
     input logic [31:0] pc_next,
@@ -7,7 +8,7 @@ module programCounter #(
 );
   always_ff @(posedge pc_en, posedge reset) begin
     if (reset) begin
-      pc <= 13'h1000;
+      pc <= PROGRAM_START;
     end else begin
       pc <= pc_next;
     end
