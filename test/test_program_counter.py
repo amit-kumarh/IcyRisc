@@ -12,15 +12,15 @@ LANGUAGE = os.getenv("HDL_TOPLEVEL_LANG", "verilog").lower().strip()
 
 @cocotb.test()
 async def test_reset(dut):
-    dut.reset.value = 0
-    await Timer(80, 'ns')
     dut.reset.value = 1
+    await Timer(80, 'ns')
+    dut.reset.value = 0
     await Timer(80, 'ns')
     assert dut.pc.value == 0x100
 
 @cocotb.test()
 async def test_pc_next(dut):
-    dut.reset.value = 0
+    dut.reset.value = 1
     dut.pc_next.value = 0
 
     clock = Clock(dut.pc_en, 80, unit="ns")

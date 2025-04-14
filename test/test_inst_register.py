@@ -2,6 +2,7 @@ import cocotb
 import os
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge
+from cocotb.triggers import Timer
 from cocotb_tools.runner import get_runner
 
 from pathlib import Path
@@ -10,17 +11,22 @@ async def test_inst_register_simple(dut):
     clock = Clock(dut.instr_en, 80, unit="ns")
     cocotb.start_soon(clock.start(start_high=False))
 
-    # set inputs
-    dut.pc.value = 1
-    dut.mem_read_data.value = 2
+    # initial values
+    dut.pc.value = 0
+    dut.mem_read_data.value = 0
 
     # check initial values
     await RisingEdge(dut.instr_en)
     assert dut.instr.value == 0
     assert dut.pc_old.value == 0
 
-    # inputs should register
+    # set new values
+    dut.pc.value = 1
+    dut.mem_read_data.value = 2
+
+    # inputs should register just after 1 clock cycle
     await RisingEdge(dut.instr_en)
+    await Timer(5, 'ns')
     assert dut.pc_old.value == 1
     assert dut.instr.value == 2
 
