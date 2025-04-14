@@ -8,6 +8,7 @@ module top (
     output logic LED
 );
   logic [31:0] mem_rd;
+  logic [31:0] mem_rd_clocked;
 
   logic pc_en;
   logic inst_en;

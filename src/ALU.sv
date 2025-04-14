@@ -3,8 +3,8 @@
 module ALU (
     input logic [31:0] PC,
     input logic [31:0] PC_old,
-    input logic [4:0] rs1v,
-    input logic [4:0] rs2v,
+    input logic [31:0] rs1v,
+    input logic [31:0] rs2v,
     input logic [31:0] imm_ext,
     input logic [1:0] ALU_src1_sel,
     input logic [1:0] ALU_src2_sel,

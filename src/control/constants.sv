@@ -9,7 +9,7 @@
 `define OP_JALR 103
 `define OP_JAL 111
 
-typedef enum {
+typedef enum bit [3:0] {
   ADD,
   SUB,
   AND,
@@ -22,36 +22,36 @@ typedef enum {
   SRA
 } alu_ctrl_t;
 
-typedef enum {
+typedef enum bit [1:0] {
   ADD_OP,
   SUB_OP,
   FUNCT_DEFINED
 } alu_ops_t;
 
-typedef enum {
+typedef enum bit [1:0] {
   PC,
   PC_OLD,
   RS1V
 } alu_src1_sel_t;
 
-typedef enum {
+typedef enum bit [1:0] {
   RS2V,
   IMM,
   PC_INC
 } alu_src2_sel_t;
 
-typedef enum {
+typedef enum bit {
   ADDR_PC,
   ADDR_RESULT
 } mem_addr_sel_t;
 
-typedef enum {
+typedef enum bit [1:0] {
   ALU_CLOCKED,
   MEM_RD,
   ALU_RESULT
 } result_sel_t;
 
-typedef enum {
+typedef enum bit [2:0] {
   ITYPE,
   STYPE,
   BTYPE,

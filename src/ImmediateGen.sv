@@ -1,9 +1,9 @@
 // Immediate Value Generate Module (made up of only immed extender)
 
 module ImmediateGen (
-    input logic immed[24:0],
-    input logic imm_ctrl[2:0],
-    output logic signed imm_ext[31:0]
+    input logic [24:0] immed,
+    input logic [2:0] imm_ctrl,
+    output logic signed [31:0] imm_ext
 );
 
   always_comb begin
