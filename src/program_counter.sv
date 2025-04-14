@@ -6,7 +6,7 @@ module program_counter #(
     input logic pc_en,
     output logic [31:0] pc
 );
-  always_ff @(posedge pc_en, posedge reset) begin
+  always_ff @(posedge pc_en, negedge reset) begin
     if (!reset) begin
       pc <= PROGRAM_START;
     end else begin

@@ -1,4 +1,5 @@
 filename = ./src/top
+buildname = ./build/top
 pcf_file = ../common/iceBlinkPico.pcf
 
 build:
@@ -10,11 +11,11 @@ prog: #for sram
 	dfu-util --alt 0 -D $(filename).bin -R
 
 clean:
-	rm -rf $(filename).blif $(filename).asc $(filename).json $(filename).bin $(filename).vvp
+	rm -rf $(buildname).blif $(buildname).asc $(buildname).json $(buildname).bin $(buildname).vvp
 
 sim:
-	iverilog -g2012 -o $(filename).vvp -c top.f $(filename)_tb.sv
-	vvp $(filename).vvp
-	gtkwave $(filename).vcd wavegen.gtkw
+	iverilog -g2012 -o $(buildname).vvp -c top.f $(filename)_tb.sv
+	vvp $(buildname).vvp
+	gtkwave $(buildname).vcd build/wavegen.gtkw
 
 flash: build prog
