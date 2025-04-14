@@ -13,8 +13,12 @@ module Register #(
     output logic [31:0] rs2v
 )
 //define register block
+
 logic [31:0] register_file [32];
 register_file [0] = 32'b0;
+logic [31:0] rs1v_imm;
+logic [31:0] rs2v_imm;
+
 
 
 //write data to wrtie data address when write enable is high (never overwrite r0 is hard 0)
@@ -29,9 +33,13 @@ end
 //read data from the frist read data register
 
 always_ff @(posedge clk)begin
-    rs1v <= register_file [rs1]
-    rs2v <= register_file [rs2]
+    rs1v_imm <= register_file [rs1];
+    rs2v_imm <= register_file [rs2];
 end
 
+always_ff a(posedge clk)begin
+    rs1v <= rs1v_imm;
+    rs2v <= rs2v_imm;  
+end
 
 endmodule
