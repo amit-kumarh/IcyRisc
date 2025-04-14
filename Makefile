@@ -1,4 +1,4 @@
-filename = top
+filename = ./src/top
 pcf_file = ../common/iceBlinkPico.pcf
 
 build:
@@ -13,7 +13,7 @@ clean:
 	rm -rf $(filename).blif $(filename).asc $(filename).json $(filename).bin $(filename).vvp
 
 sim:
-	iverilog -g2012 -o $(filename).vvp $(filename)_tb.sv
+	iverilog -g2012 -o $(filename).vvp -c top.f $(filename)_tb.sv
 	vvp $(filename).vvp
 	gtkwave $(filename).vcd wavegen.gtkw
 

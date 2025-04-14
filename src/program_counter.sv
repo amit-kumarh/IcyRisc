@@ -1,5 +1,5 @@
 module program_counter #(
-    parameter PROGRAM_START = 9'h100
+    parameter PROGRAM_START = 32'd0
 ) (
     input logic reset,
     input logic [31:0] pc_next,

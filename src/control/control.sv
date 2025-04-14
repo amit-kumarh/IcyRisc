@@ -1,5 +1,3 @@
-`include "/home/amit/Documents/CompArch/comparch/IcyRisc/src/control/fsm.sv"
-
 module control (
     input logic reset,
     input logic clk,

@@ -1,5 +1,3 @@
-`include "/home/amit/Documents/CompArch/comparch/IcyRisc/src/control/constants.sv"
-
 module fsm (
     input logic reset,
     input logic clk,
