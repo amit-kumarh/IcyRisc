@@ -22,8 +22,6 @@ LUI = 0x0002f137 # lui x2, 47
 AUIPC = 0x0002f117 # auipc x2, 47
 JAL = 0x02e0016f # jal x2, 47
 
-
-
 LANGUAGE = os.getenv("HDL_TOPLEVEL_LANG", "verilog").lower().strip()
 
 @cocotb.test()
@@ -423,7 +421,6 @@ def test_control_unit():
     sim = os.getenv("SIM", "icarus")
     proj_path = Path(__file__).resolve().parent
     sources = list((proj_path.parent / "src" / "control").glob("control.sv"))
-    print(sources)
     runner = get_runner(sim)
     runner.build(
         sources=sources,
