@@ -4,7 +4,7 @@ module Result #(
 
 )(
     input logic clk,
-    input logic signed ALU_result,
+    input logic ALU_result,
     input logic [31:0] data,
     input logic [1:0] result_sel,
     output logic [31:0] result
