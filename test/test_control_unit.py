@@ -420,7 +420,7 @@ async def test_imm_decoder(dut):
 def test_control_unit():
     sim = os.getenv("SIM", "icarus")
     proj_path = Path(__file__).resolve().parent
-    sources = list((proj_path.parent / "src" / "control").glob("control.sv"))
+    sources = list((proj_path.parent / "src" / "control").glob("*.sv"))
     runner = get_runner(sim)
     runner.build(
         sources=sources,
