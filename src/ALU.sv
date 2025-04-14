@@ -13,9 +13,10 @@ module ALU (
     output logic zero
 );
 
-  parameter increment = 4;
+  parameter int INCREMENT = 4;
   logic [31:0] src1_result = 0;
   logic [31:0] src2_result = 0;
+  logic [ 4:0] shift_value;
 
   always_comb begin
     case (ALU_src1_sel)
@@ -43,7 +44,7 @@ module ALU (
         src2_result = imm_ext;
       end
       2'd2: begin
-        src2_result = increment;
+        src2_result = INCREMENT;
       end
       2'd3: begin
         src2_result = src2_result;
@@ -95,17 +96,17 @@ module ALU (
       4'd7: begin
         //Shift the src1 value left by a number of bits equal to the lower 5 bits of src2
         shift_value = src2_result[4:0];
-        ALU_result  = {src1_result[31-shift_value:0], '0};
+        ALU_result  = src1_result << shift_value;
       end
       4'd8: begin
         //Shift the src1 value right by a number of bits equal to the lower 5 bits of src2
         shift_value = src2_result[4:0];
-        ALU_result  = {'0, src1_result[31:shift_value]};
+        ALU_result  = src1_result >> shift_value;
       end
       4'd9: begin
         //Shift the src1 value right by a number of bits equal to the lower 5 bits of src2 and preserve the sign bit
         shift_value = src2_result[4:0];
-        ALU_result  = {src1_result[31], '0, src1_result[30:shift_value]};
+        ALU_result  = src1_result >>> shift_value;
       end
       4'd10: begin
 

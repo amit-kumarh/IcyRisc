@@ -13,11 +13,12 @@ module Register (
   //define register block
 
   logic [31:0] register_file[32];
-  assign register_file[0] = '0;
   logic [31:0] rs1v_imm;
   logic [31:0] rs2v_imm;
 
-
+  initial begin
+    register_file[0] = '0;
+  end
 
   //write data to wrtie data address when write enable is high (never overwrite r0 is hard 0)
   always_ff @(posedge clk) begin

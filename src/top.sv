@@ -122,7 +122,7 @@ module top (
   end
 
   memory #(
-      .INIT_FILE("rv32i_test.txt")
+      .INIT_FILE("programs/rv32i_test")
   ) mem0 (
       .clk(clk),
       .write_mem(mem_wren),
