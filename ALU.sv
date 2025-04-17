@@ -119,10 +119,10 @@ always_comb begin
             ALU_result = {src1_result[31], shift_value'b0, src1_result[30:shift_value]};
         end
         2'd10: begin
-
+            ALU_result = src1_result;
         end
         2'd11: begin
-            
+            ALU_result = src2_result;
         end
         2'd12: begin
 
