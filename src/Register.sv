@@ -16,9 +16,10 @@ module Register (
   logic [31:0] rs1v_imm;
   logic [31:0] rs2v_imm;
 
-  initial begin
-    register_file[0] = '0;
-  end
+initial begin
+  foreach (register_file[i])
+    register_file[i] = 32'b0;
+end
 
   //write data to wrtie data address when write enable is high (never overwrite r0 is hard 0)
   always_ff @(posedge clk) begin
