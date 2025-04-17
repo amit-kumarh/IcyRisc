@@ -12,9 +12,10 @@ module fsm (
     output logic mem_wren,
 
     output mem_addr_sel_t mem_addr_sel,
+    output mem_funct3_sel_t mem_funct3_sel,
     output alu_src1_sel_t alu_src1_sel,
     output alu_src2_sel_t alu_src2_sel,
-    output result_sel_t   result_sel,
+    output result_sel_t result_sel,
 
     output alu_ops_t alu_op
 );
@@ -48,6 +49,7 @@ module fsm (
   logic reg_wren_n;
   logic mem_wren_n;
   mem_addr_sel_t mem_addr_sel_n;
+  mem_funct3_sel_t mem_funct3_sel_n;
   alu_src1_sel_t alu_src1_sel_n;
   alu_src2_sel_t alu_src2_sel_n;
   result_sel_t result_sel_n;
@@ -58,7 +60,7 @@ module fsm (
 
   always_ff @(posedge clk, negedge reset) begin
     if (!reset) begin
-      state <= ALU_WB;  // any end state so that the outputs for FETCH are correct
+      state <= BRANCH;  // any end state so that the outputs for FETCH are correct
       next_state <= FETCH;
     end else state <= next_state;
   end
@@ -101,14 +103,16 @@ module fsm (
     reg_wren_n = 0;
     mem_wren_n = 0;
     mem_addr_sel_n = ADDR_PC;
+    mem_funct3_sel_n = MEM_FUNCT_DEFINED;
     alu_src1_sel_n = RS1V;
     alu_src2_sel_n = RS2V;
     alu_op_n = ADD_OP;
-    result_sel_n = ALU_CLOCKED;
+    result_sel_n = ZERO;
 
     case (next_state)
       FETCH: begin
         mem_addr_sel_n = ADDR_PC;
+        mem_funct3_sel_n = FETCH_INST;
         inst_en_n = 1;
         alu_src1_sel_n = PC;
         alu_src2_sel_n = PC_INC;
@@ -182,9 +186,10 @@ module fsm (
       mem_wren <= 0;
       // pick some set of defaults
       mem_addr_sel <= ADDR_PC;
+      mem_funct3_sel <= FETCH_INST;
       alu_src1_sel <= RS1V;
       alu_src2_sel <= RS2V;
-      result_sel <= ALU_CLOCKED;
+      result_sel <= ZERO;
       alu_op <= ADD_OP;
     end else begin
       branch <= branch_n;
@@ -193,6 +198,7 @@ module fsm (
       reg_wren <= reg_wren_n;
       mem_wren <= mem_wren_n;
       mem_addr_sel <= mem_addr_sel_n;
+      mem_funct3_sel <= mem_funct3_sel_n;
       alu_src1_sel <= alu_src1_sel_n;
       alu_src2_sel <= alu_src2_sel_n;
       result_sel <= result_sel_n;

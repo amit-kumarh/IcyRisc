@@ -17,6 +17,7 @@ module top (
   imm_ctrl_t imm_ctrl;
   alu_ctrl_t alu_ctrl;
   mem_addr_sel_t mem_addr_sel;
+  mem_funct3_sel_t mem_funct3_sel;
   alu_src1_sel_t alu_src1_sel;
   alu_src2_sel_t alu_src2_sel;
   result_sel_t result_sel;
@@ -51,9 +52,10 @@ module top (
       .alu_ctrl(alu_ctrl),
 
       .mem_addr_sel(mem_addr_sel),
+      .mem_funct3_sel(mem_funct3_sel),
       .alu_src1_sel(alu_src1_sel),
       .alu_src2_sel(alu_src2_sel),
-      .result_sel  (result_sel)
+      .result_sel(result_sel)
   );
 
   ALU alu0 (
@@ -83,7 +85,7 @@ module top (
   );
 
   ImmediateGen imm0 (
-      .immed(mem_rd[31:7]),
+      .immed(inst[31:7]),
       .imm_ctrl(imm_ctrl),
       .imm_ext(imm_ext)
   );
@@ -97,6 +99,7 @@ module top (
   );
 
   program_counter p0 (
+      .clk(clk),
       .reset(SW),
       .pc_next(result),
       .pc_en(pc_en),
@@ -121,12 +124,21 @@ module top (
     endcase
   end
 
+  // address mux
+  logic [2:0] mem_funct3;
+  always_comb begin
+    case (mem_funct3_sel)
+      FETCH_INST: mem_funct3 = 3'b010;
+      default: mem_funct3 = inst[14:12];
+    endcase
+  end
+
   memory #(
       .INIT_FILE("programs/rv32i_test")
   ) mem0 (
       .clk(clk),
       .write_mem(mem_wren),
-      .funct3(inst[14:12]),
+      .funct3(mem_funct3),
       .write_address(mem_addr),
       .write_data(rs2v),
       .read_address(mem_addr),

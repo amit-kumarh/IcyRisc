@@ -45,10 +45,16 @@ typedef enum bit {
   ADDR_RESULT
 } mem_addr_sel_t;
 
+typedef enum bit {
+  FETCH_INST,
+  MEM_FUNCT_DEFINED
+} mem_funct3_sel_t;
+
 typedef enum bit [1:0] {
   ALU_CLOCKED,
   MEM_RD,
-  ALU_RESULT
+  ALU_RESULT,
+  ZERO
 } result_sel_t;
 
 typedef enum bit [2:0] {

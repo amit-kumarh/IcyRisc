@@ -22,7 +22,7 @@ module Result (
         result = ALU_result;
       end
       2'd3: begin
-        result = result;
+        result = 0;
       end
     endcase
   end

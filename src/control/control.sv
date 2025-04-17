@@ -17,9 +17,10 @@ module control (
 
     // mux selectors
     output mem_addr_sel_t mem_addr_sel,
+    output mem_funct3_sel_t mem_funct3_sel,
     output alu_src1_sel_t alu_src1_sel,
     output alu_src2_sel_t alu_src2_sel,
-    output result_sel_t   result_sel
+    output result_sel_t result_sel
 );
   alu_ops_t alu_op;
   logic pc_update;
@@ -48,6 +49,7 @@ module control (
       .reg_wren(reg_wren),
       .mem_wren(mem_wren),
       .mem_addr_sel(mem_addr_sel),
+      .mem_funct3_sel(mem_funct3_sel),
       .alu_src1_sel(alu_src1_sel),
       .alu_src2_sel(alu_src2_sel),
       .result_sel(result_sel),
