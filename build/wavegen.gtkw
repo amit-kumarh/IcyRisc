@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Thu Apr 17 15:16:25 2025
+[*]
+[dumpfile] "/home/amit/Documents/CompArch/comparch/IcyRisc/build/top.vcd"
+[dumpfile_mtime] "Thu Apr 17 15:09:23 2025"
+[dumpfile_size] 1644899
+[savefile] "/home/amit/Documents/CompArch/comparch/IcyRisc/build/wavegen.gtkw"
+[timestart] 109200
+[size] 1916 1002
+[pos] -966 -6
+*-15.900000 296900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top_tb.
+[treeopen] top_tb.u0.
+[sst_width] 297
+[signals_width] 166
+[sst_expanded] 1
+[sst_vpaned_height] 306
+@28
+top_tb.u0.c0.f0.clk
+@420
+top_tb.u0.c0.f0.state
+@22
+top_tb.u0.p0.pc[31:0]
+top_tb.u0.p0.pc_next[31:0]
+@28
+top_tb.u0.p0.pc_en
+top_tb.u0.c0.reset
+top_tb.u0.c0.result_sel[1:0]
+@22
+top_tb.u0.alu0.ALU_ctrl[3:0]
+top_tb.u0.alu0.src1_result[31:0]
+top_tb.u0.alu0.src2_result[31:0]
+top_tb.u0.alu0.ALU_result[31:0]
+top_tb.u0.i0.inst[31:0]
+top_tb.u0.i0.pc_old[31:0]
+@28
+top_tb.u0.imm0.imm_ctrl[2:0]
+@23
+top_tb.u0.imm0.immed[24:0]
+@22
+top_tb.u0.imm0.imm_ext[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
