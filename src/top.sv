@@ -79,6 +79,7 @@ module top (
       .rs2(inst[24:20]),
       .wd_reg(inst[11:7]),
       .wdv(result),
+      .wren(reg_wren),
 
       .rs1v(rs1v),
       .rs2v(rs2v)

@@ -29,6 +29,7 @@ module fsm (
     MEM_ADDR,
     EXEC_R,
     EXEC_I,
+    EXEC_U,
 
     // mem ops
     MEM_READ,
@@ -73,7 +74,8 @@ module fsm (
       DECODE: begin
         case (opcode)
           `OP_RTYPE: next_state = EXEC_R;
-          `OP_ITYPE, `OP_LUI, `OP_AUIPC: next_state = EXEC_I;
+          `OP_ITYPE: next_state = EXEC_I;
+          `OP_LUI, `OP_AUIPC: next_state = EXEC_U;
           `OP_LOAD, `OP_STYPE: next_state = MEM_ADDR;
           `OP_BTYPE: next_state = BRANCH;
           `OP_JAL, `OP_JALR: next_state = JUMP;
@@ -87,7 +89,7 @@ module fsm (
           default:   ;
         endcase
       end
-      EXEC_R, EXEC_I, JUMP: next_state = ALU_WB;
+      EXEC_R, EXEC_I, EXEC_U, JUMP: next_state = ALU_WB;
       MEM_READ: next_state = MEM_WB;
       MEM_WB, MEM_WRITE, ALU_WB, BRANCH: next_state = FETCH;
       default: ;
@@ -140,6 +142,11 @@ module fsm (
         alu_src1_sel_n = RS1V;
         alu_src2_sel_n = IMM;
         alu_op_n = FUNCT_DEFINED;
+      end
+      EXEC_U: begin
+        alu_src1_sel_n = RS1V;
+        alu_src2_sel_n = IMM;
+        alu_op_n = ADD_OP;
       end
       MEM_READ: begin
         result_sel_n   = ALU_CLOCKED;
