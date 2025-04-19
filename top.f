@@ -1,12 +1,12 @@
-src/control/constants.sv
-src/control/fsm.sv
-src/control/control.sv
-src/ALU.sv
-src/ImmediateGen.sv
-src/inst_register.sv
-src/memory.sv
-src/program_counter.sv
-src/Register.sv
-src/Result.sv
-src/top.sv
+$(PROJ_ROOT)/src/control/constants.sv
+$(PROJ_ROOT)/src/control/fsm.sv
+$(PROJ_ROOT)/src/control/control.sv
+$(PROJ_ROOT)/src/ALU.sv
+$(PROJ_ROOT)/src/ImmediateGen.sv
+$(PROJ_ROOT)/src/inst_register.sv
+$(PROJ_ROOT)/src/memory.sv
+$(PROJ_ROOT)/src/program_counter.sv
+$(PROJ_ROOT)/src/Register.sv
+$(PROJ_ROOT)/src/Result.sv
+$(PROJ_ROOT)/src/top.sv
 
