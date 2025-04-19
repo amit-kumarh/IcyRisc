@@ -18,7 +18,7 @@ module ImmediateGen (
         imm_ext = $signed({immed[24], immed[0], immed[23:18], immed[4:1]});
       end
       3'd3: begin
-        imm_ext = $signed(immed[24:5]);
+        imm_ext = immed[24:5] << 12;
       end
       3'd4: begin
         imm_ext = $signed({immed[24], immed[12:5], immed[13], immed[23:14]});

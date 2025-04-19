@@ -79,6 +79,12 @@ module alu_decoder (
       SUB_OP: begin
         alu_ctrl = SUB;
       end
+      SRC1_OP: begin
+        alu_ctrl = SRC1;
+      end
+      SRC2_OP: begin
+        alu_ctrl = SRC2;
+      end
       FUNCT_DEFINED: begin
         case (funct3)
           3'b000: begin

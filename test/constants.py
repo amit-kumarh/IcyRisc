@@ -21,6 +21,8 @@ SLTU = 6
 SLL = 7
 SRL = 8
 SRA = 9
+SRC1 = 10
+SRC2 = 11
 
 ADD_OP = 0
 SUB_OP = 1

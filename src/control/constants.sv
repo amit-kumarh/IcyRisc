@@ -19,12 +19,16 @@ typedef enum bit [3:0] {
   SLTU,
   SLL,
   SRL,
-  SRA
+  SRA,
+  SRC1,
+  SRC2
 } alu_ctrl_t;
 
-typedef enum bit [1:0] {
+typedef enum bit [2:0] {
   ADD_OP,
   SUB_OP,
+  SRC1_OP,
+  SRC2_OP,
   FUNCT_DEFINED
 } alu_ops_t;
 

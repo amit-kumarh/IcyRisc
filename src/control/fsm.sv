@@ -29,7 +29,7 @@ module fsm (
     MEM_ADDR,
     EXEC_R,
     EXEC_I,
-    EXEC_U,
+    EXEC_LUI,
 
     // mem ops
     MEM_READ,
@@ -75,7 +75,8 @@ module fsm (
         case (opcode)
           `OP_RTYPE: next_state = EXEC_R;
           `OP_ITYPE: next_state = EXEC_I;
-          `OP_LUI, `OP_AUIPC: next_state = EXEC_U;
+          `OP_AUIPC: next_state = ALU_WB;
+          `OP_LUI: next_state = EXEC_LUI;
           `OP_LOAD, `OP_STYPE: next_state = MEM_ADDR;
           `OP_BTYPE: next_state = BRANCH;
           `OP_JAL, `OP_JALR: next_state = JUMP;
@@ -89,7 +90,7 @@ module fsm (
           default:   ;
         endcase
       end
-      EXEC_R, EXEC_I, EXEC_U, JUMP: next_state = ALU_WB;
+      EXEC_R, EXEC_I, EXEC_LUI, JUMP: next_state = ALU_WB;
       MEM_READ: next_state = MEM_WB;
       MEM_WB, MEM_WRITE, ALU_WB, BRANCH: next_state = FETCH;
       default: ;
@@ -105,7 +106,7 @@ module fsm (
     reg_wren_n = 0;
     mem_wren_n = 0;
     mem_addr_sel_n = ADDR_PC;
-    mem_funct3_sel_n = MEM_FUNCT_DEFINED;
+    mem_funct3_sel_n = FETCH_INST;
     alu_src1_sel_n = RS1V;
     alu_src2_sel_n = RS2V;
     alu_op_n = ADD_OP;
@@ -114,7 +115,6 @@ module fsm (
     case (next_state)
       FETCH: begin
         mem_addr_sel_n = ADDR_PC;
-        mem_funct3_sel_n = FETCH_INST;
         inst_en_n = 1;
         alu_src1_sel_n = PC;
         alu_src2_sel_n = PC_INC;
@@ -143,18 +143,19 @@ module fsm (
         alu_src2_sel_n = IMM;
         alu_op_n = FUNCT_DEFINED;
       end
-      EXEC_U: begin
-        alu_src1_sel_n = RS1V;
+      EXEC_LUI: begin
         alu_src2_sel_n = IMM;
-        alu_op_n = ADD_OP;
+        alu_op_n = SRC2_OP;
       end
       MEM_READ: begin
-        result_sel_n   = ALU_CLOCKED;
+        result_sel_n = ALU_CLOCKED;
         mem_addr_sel_n = ADDR_RESULT;
+        mem_funct3_sel_n = MEM_FUNCT_DEFINED;
       end
       MEM_WRITE: begin
         result_sel_n = ALU_CLOCKED;
         mem_addr_sel_n = ADDR_RESULT;
+        mem_funct3_sel_n = MEM_FUNCT_DEFINED;
         mem_wren_n = 1;
       end
       MEM_WB: begin
