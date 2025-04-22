@@ -8,31 +8,22 @@ module ImmediateGen (
 
   always_comb begin
     case (imm_ctrl)
-      3'd0: begin
+      ITYPE: begin
         imm_ext = $signed(immed[24:13]);
       end
-      3'd1: begin
+      STYPE: begin
         imm_ext = $signed({immed[24:18], immed[4:0]});
       end
-      3'd2: begin
+      BTYPE: begin
         imm_ext = $signed({immed[24], immed[0], immed[23:18], immed[4:1]});
       end
-      3'd3: begin
+      UTYPE: begin
         imm_ext = immed[24:5] << 12;
       end
-      3'd4: begin
-        imm_ext = $signed({immed[24], immed[12:5], immed[13], immed[23:14]});
+      JTYPE: begin
+        imm_ext = $signed({immed[24], immed[12:5], immed[13], immed[23:14], 1'b0});
       end
-      3'd5: begin
-
-      end
-      3'd6: begin
-
-      end
-      3'd7: begin
-
-      end
-
+      default: ;
     endcase
   end
 

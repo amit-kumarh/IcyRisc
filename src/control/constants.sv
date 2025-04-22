@@ -69,10 +69,9 @@ typedef enum bit [2:0] {
   JTYPE
 } imm_ctrl_t;
 
-typedef enum [1:0] { 
+typedef enum bit [1:0] {
   GREATER,
   EQUAL,
   LESS
-
-} ALU_comp;
+} alu_comp_t;
 

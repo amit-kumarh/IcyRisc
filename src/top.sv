@@ -145,7 +145,6 @@ module top (
       .read_address(mem_addr),
 
       .read_data(mem_rd),
-      .read_data_clocked(mem_rd_clocked),
 
       .led  (led),
       .red  (red),

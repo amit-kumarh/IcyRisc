@@ -29,7 +29,6 @@ module memory #(
     input logic [31:0] write_data,
     input logic [31:0] read_address,
     output logic [31:0] read_data,
-    output logic [31:0] read_data_clocked,
     output logic led,  // Active-high PWM output for user LED
     output logic red,  // Active-high PWM output for red LED
     output logic green,  // Active-high PWM output for green LED
@@ -344,12 +343,6 @@ module memory #(
       micros_counter <= micros_counter + 1;
     end
   end
-
-  // Implement micros counter
-  always_ff @(posedge clk) begin
-    read_data_clocked <= read_data;
-  end
-
 endmodule
 
 module memory_array #(
