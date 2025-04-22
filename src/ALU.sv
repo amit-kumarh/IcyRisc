@@ -61,13 +61,10 @@ module ALU (
       SUB: begin
         //Return the difference between src1 & 2, set zero wire high if they are equal
         ALU_result = src1_result - src2_result;
-        if (ALU_result == 0) begin
-          zero = 1;
-        end
       end
       AND: begin
         //Return a list of bits that is a bit wise and of src1 and 2
-        ALU_result = src1_result & src2_result;
+        ALU_result = src1_result & src2_resultEQUAL;
       end
       OR: begin
         //Return a list of bits that is a bit wise or of src1 and 2
@@ -81,16 +78,26 @@ module ALU (
         //Return 1 if src1 < src2
         if ($signed(src1_result) > $signed(src2_result)) begin
           ALU_result = 0;
+          ALU_comp = LESS;
+        end else if ($signed(src1_result) == $signed(src2_result))begin
+          ALU_result = 1;
+          ALU_comp = EQUAL;
         end else begin
           ALU_result = 1;
+          ALU_comp = GREATER;
         end
       end
       SLTU: begin
         //Return 1 if src1 < src2 unsigned
         if (src1_result > src2_result) begin
           ALU_result = 0;
+          ALU_comp = LESS;
+        end else if (src1_result == src2_result) begin
+          ALU_result = 1;
+          ALU_comp = EQUAL;
         end else begin
           ALU_result = 1;
+          ALU_comp = GREATER;
         end
       end
       SLL: begin
