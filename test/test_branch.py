@@ -35,7 +35,7 @@ async def initialize_registers(dut, reg_indexes, values):
         current_registers[reg_index] = value
     dut.reg0.register_file.value = Array(current_registers)
 
-async def run_branch_test(dut, inst, rs1_val, rs2_val, expected_pc):
+async def run_branch_test(dut, inst, expected_pc):
     """Runs a single branch instruction test."""
     dut.SW.value = 0
     dut.inst.value = inst
@@ -44,29 +44,12 @@ async def run_branch_test(dut, inst, rs1_val, rs2_val, expected_pc):
 
     # Reset registers here
     await RisingEdge(dut.clk)
+    await FallingEdge(dut.clk)
     dut.SW.value = 1
 
     await RisingEdge(dut.clk)  # FETCH
     await RisingEdge(dut.clk)  # DECODE
-    await FallingEdge(dut.clk)
-    print(f"Branch Target Offset: 0x{int(dut.alu_result.value):08X}")
     await RisingEdge(dut.clk)  # BRANCH
-    await FallingEdge(dut.clk)
-
-    print(dut.alu0.src1_result.value)
-    print(dut.imm_ext.value)
-    print(dut.alu0.ALU_ctrl.value)
-    print(dut.alu_result.value)
-
-    print("rs1", hex(dut.alu0.src1_result.value))
-    print("rs2", hex(dut.alu0.src2_result.value))
-    print("alu_op", dut.alu0.ALU_ctrl.value)
-    print("alu_cmp", dut.alu0.ALU_comp.value)
-    print("Branch", dut.c0.b0.branch.value)
-    print("f3", dut.c0.b0.funct3.value)
-    print("alu_comp", dut.c0.b0.alu_comp.value)
-    print("branch_ctrl", dut.c0.b0.branch_ctrl.value)
-
     await RisingEdge(dut.clk)  # FETCH
 
     await FallingEdge(dut.clk)
@@ -83,8 +66,8 @@ async def test_beq_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010  # Branch forward 16 bytes
     inst = assemble_b_instruction(FUNCT3_BEQ, 1, 2, imm)
-    print("INST", bin(inst))
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    print("INST", hex(inst))
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_beq_not_taken(dut):
@@ -94,7 +77,7 @@ async def test_beq_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BEQ, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 @cocotb.test()
 async def test_bne_taken(dut):
@@ -104,7 +87,7 @@ async def test_bne_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BNE, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_bne_not_taken(dut):
@@ -114,7 +97,7 @@ async def test_bne_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BNE, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 @cocotb.test()
 async def test_blt_taken(dut):
@@ -124,7 +107,7 @@ async def test_blt_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BLT, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_blt_not_taken(dut):
@@ -134,7 +117,7 @@ async def test_blt_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BLT, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 @cocotb.test()
 async def test_bge_taken(dut):
@@ -144,7 +127,7 @@ async def test_bge_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BGE, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_bge_not_taken(dut):
@@ -154,7 +137,7 @@ async def test_bge_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BGE, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 @cocotb.test()
 async def test_bltu_taken(dut):
@@ -164,7 +147,7 @@ async def test_bltu_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BLTU, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_bltu_not_taken(dut):
@@ -174,7 +157,7 @@ async def test_bltu_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BLTU, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 @cocotb.test()
 async def test_bgeu_taken(dut):
@@ -184,7 +167,7 @@ async def test_bgeu_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BGEU, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, imm)
+    await run_branch_test(dut, inst, imm)
 
 @cocotb.test()
 async def test_bgeu_not_taken(dut):
@@ -194,7 +177,7 @@ async def test_bgeu_not_taken(dut):
     await initialize_registers(dut, [RS1, RS2], [rs1_val, rs2_val])
     imm = 0x00000010
     inst = assemble_b_instruction(FUNCT3_BGEU, 1, 2, imm)
-    await run_branch_test(dut, inst, rs1_val, rs2_val, 4)
+    await run_branch_test(dut, inst, 4)
 
 def test_branch():
     sim = os.getenv("SIM", "icarus")

@@ -329,7 +329,6 @@ async def test_alu_decoder(dut):
     dut.ad0.funct3.value = 0b000
     dut.ad0.op_5.value = 0 # addi
     await RisingEdge(dut.clk)
-    print(dut.alu_ctrl.value)
     assert dut.alu_ctrl.value == ADD
 
     dut.ad0.op_5.value = 1 # add
