@@ -53,6 +53,7 @@ module ALU (
   end
 
   always_comb begin
+    ALU_comp = GREATER;
     case (ALU_ctrl)
       ADD: begin
         //Return the sum of src1 and 2
@@ -64,7 +65,7 @@ module ALU (
       end
       AND: begin
         //Return a list of bits that is a bit wise and of src1 and 2
-        ALU_result = src1_result & src2_resultEQUAL;
+        ALU_result = src1_result & src2_result;
       end
       OR: begin
         //Return a list of bits that is a bit wise or of src1 and 2

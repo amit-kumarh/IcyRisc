@@ -2,6 +2,7 @@ module fsm (
     input logic reset,
     input logic clk,
 
+    input logic [2:0] funct3,
     input logic [6:0] opcode,
 
     output logic branch,
@@ -167,10 +168,10 @@ module fsm (
         reg_wren_n   = 1;
       end
       BRANCH: begin
-        // Only supports BEQ...
         alu_src1_sel_n = RS1V;
         alu_src2_sel_n = RS2V;
-        alu_op_n = SUB_OP;
+        if (funct3[1] == 1) alu_op_n = SLTU_OP;
+        else alu_op_n = SLT_OP;
         branch_n = 1;
         result_sel_n = ALU_CLOCKED;
       end

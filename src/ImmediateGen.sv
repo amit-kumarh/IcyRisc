@@ -15,7 +15,7 @@ module ImmediateGen (
         imm_ext = $signed({immed[24:18], immed[4:0]});
       end
       BTYPE: begin
-        imm_ext = $signed({immed[24], immed[0], immed[23:18], immed[4:1]});
+        imm_ext = $signed({immed[24], immed[0], immed[23:18], immed[4:1], 1'b0});
       end
       UTYPE: begin
         imm_ext = immed[24:5] << 12;
