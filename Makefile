@@ -14,7 +14,7 @@ clean:
 	rm -rf $(buildname).blif $(buildname).asc $(buildname).json $(buildname).bin $(buildname).vvp
 
 sim:
-	export PROJ_ROOT='.'; iverilog -g2012 -o $(buildname).vvp -c top.f $(filename)_tb.sv
+	export PROJ_ROOT='.'; iverilog -g2012 -o $(buildname).vvp -c top.f  -D 'MEM_FILE_PATH_PREFIX="programs/test_mem"' $(filename)_tb.sv
 	vvp $(buildname).vvp
 	gtkwave $(buildname).vcd build/wavegen.gtkw
 

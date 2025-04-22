@@ -172,6 +172,7 @@ module fsm (
         alu_src2_sel_n = RS2V;
         alu_op_n = SUB_OP;
         branch_n = 1;
+        result_sel_n = ALU_CLOCKED;
       end
       JUMP: begin
         alu_src1_sel_n = PC_OLD;

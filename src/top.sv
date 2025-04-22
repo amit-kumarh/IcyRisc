@@ -94,7 +94,7 @@ module top (
   Result r0 (
       .clk(clk),
       .ALU_result(alu_result),
-      .data(mem_rd_clocked),
+      .data(mem_rd),
       .result_sel(result_sel),
       .result(result)
   );
@@ -135,7 +135,7 @@ module top (
   end
 
   memory #(
-      .INIT_FILE("programs/rv32i_test")
+      .INIT_FILE(`MEM_FILE_PATH_PREFIX)
   ) mem0 (
       .clk(clk),
       .write_mem(mem_wren),

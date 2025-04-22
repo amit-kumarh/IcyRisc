@@ -78,19 +78,19 @@ module ALU (
         ALU_result = src1_result ^ src2_result;
       end
       SLT: begin
-        //Return the lower value of src1 and 2 assuming they are signed
+        //Return 1 if src1 < src2
         if ($signed(src1_result) > $signed(src2_result)) begin
-          ALU_result = src2_result;
+          ALU_result = 0;
         end else begin
-          ALU_result = src1_result;
+          ALU_result = 1;
         end
       end
       SLTU: begin
-        //Return the lower value of src1 and 2 assuming they are unsigned
+        //Return 1 if src1 < src2 unsigned
         if (src1_result > src2_result) begin
-          ALU_result = src2_result;
+          ALU_result = 0;
         end else begin
-          ALU_result = src1_result;
+          ALU_result = 1;
         end
       end
       SLL: begin

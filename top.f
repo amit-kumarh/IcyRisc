@@ -9,4 +9,3 @@ $(PROJ_ROOT)/src/program_counter.sv
 $(PROJ_ROOT)/src/Register.sv
 $(PROJ_ROOT)/src/Result.sv
 $(PROJ_ROOT)/src/top.sv
-
