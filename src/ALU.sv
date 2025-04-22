@@ -10,7 +10,7 @@ module ALU (
     input logic [1:0] ALU_src2_sel,
     input alu_ctrl_t ALU_ctrl,
     output logic [31:0] ALU_result,
-    output logic zero
+    output alu_comp_t ALU_comp
 );
 
   parameter int INCREMENT = 4;
@@ -76,28 +76,28 @@ module ALU (
       end
       SLT: begin
         //Return 1 if src1 < src2
-        if ($signed(src1_result) > $signed(src2_result)) begin
+        if ($signed(src1_result) < $signed(src2_result)) begin
+          ALU_result = 1;
+          ALU_comp   = LESS;
+        end else if ($signed(src1_result) == $signed(src2_result)) begin
           ALU_result = 0;
-          ALU_comp = LESS;
-        end else if ($signed(src1_result) == $signed(src2_result))begin
-          ALU_result = 1;
-          ALU_comp = EQUAL;
+          ALU_comp   = EQUAL;
         end else begin
-          ALU_result = 1;
-          ALU_comp = GREATER;
+          ALU_result = 0;
+          ALU_comp   = GREATER;
         end
       end
       SLTU: begin
         //Return 1 if src1 < src2 unsigned
-        if (src1_result > src2_result) begin
-          ALU_result = 0;
-          ALU_comp = LESS;
+        if (src1_result < src2_result) begin
+          ALU_result = 1;
+          ALU_comp   = LESS;
         end else if (src1_result == src2_result) begin
-          ALU_result = 1;
-          ALU_comp = EQUAL;
+          ALU_result = 0;
+          ALU_comp   = EQUAL;
         end else begin
-          ALU_result = 1;
-          ALU_comp = GREATER;
+          ALU_result = 0;
+          ALU_comp   = GREATER;
         end
       end
       SLL: begin
