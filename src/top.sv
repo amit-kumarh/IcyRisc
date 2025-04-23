@@ -109,6 +109,7 @@ module top (
   );
 
   inst_register i0 (
+      .clk(clk),
       .pc(pc),
       .mem_rd(mem_rd),
       .inst_en(inst_en),

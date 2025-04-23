@@ -42,7 +42,9 @@ module fsm (
 
     // misc
     BRANCH,
-    JUMP
+    JUMP,
+
+    STORE_COOLDOWN
   } fsm_state_t;
 
   logic branch_n;
@@ -93,7 +95,8 @@ module fsm (
       end
       EXEC_R, EXEC_I, EXEC_LUI, JUMP: next_state = ALU_WB;
       MEM_READ: next_state = MEM_WB;
-      MEM_WB, MEM_WRITE, ALU_WB, BRANCH: next_state = FETCH;
+      MEM_WRITE: next_state = STORE_COOLDOWN;
+      MEM_WB, STORE_COOLDOWN, ALU_WB, BRANCH: next_state = FETCH;
       default: ;
     endcase
   end
@@ -159,6 +162,9 @@ module fsm (
         mem_funct3_sel_n = MEM_FUNCT_DEFINED;
         mem_wren_n = 1;
       end
+      // HACK - throw in an extra state so mem_addr_in can revert to PC
+      // TODO: fix to use separate write/read addresses
+      STORE_COOLDOWN: ;
       MEM_WB: begin
         result_sel_n = MEM_RD;
         reg_wren_n   = 1;
