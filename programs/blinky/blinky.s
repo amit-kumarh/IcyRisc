@@ -18,43 +18,48 @@ main:
 	sw	s0,24(sp)	#,
 	addi	s0,sp,32	#,,
 # blinky.c:4:   int *led_addr = (int *)0xFFFFFFFF;
-	li	a5,-1		# tmp140,
-	sw	a5,-20(s0)	# tmp140, led_addr
+	li	a5,-1		# tmp139,
+	sw	a5,-20(s0)	# tmp139, led_addr
 # blinky.c:5:   int *millis_addr = (int *)0xFFFFFFF4;
-	li	a5,-12		# tmp141,
-	sw	a5,-24(s0)	# tmp141, millis_addr
+	li	a5,-12		# tmp140,
+	sw	a5,-24(s0)	# tmp140, millis_addr
 # blinky.c:7:   *led_addr = 1;
-	lw	a5,-20(s0)		# tmp142, led_addr
-	li	a4,1		# tmp143,
-	sw	a4,0(a5)	# tmp143, *led_addr_7
-.L3:
+	lw	a5,-20(s0)		# tmp141, led_addr
+	li	a4,1		# tmp142,
+	sw	a4,0(a5)	# tmp142, *led_addr_6
+.L5:
 # blinky.c:9:     target = *millis_addr + BLINK_TIME;
-	lw	a5,-24(s0)		# tmp144, millis_addr
-	lw	a5,0(a5)		# _1, *millis_addr_8
+	lw	a5,-24(s0)		# tmp143, millis_addr
+	lw	a5,0(a5)		# _1, *millis_addr_7
 # blinky.c:9:     target = *millis_addr + BLINK_TIME;
-	addi	a5,a5,10	#, target_11, _1
-	sw	a5,-28(s0)	# target_11, target
+	addi	a5,a5,10	#, target_10, _1
+	sw	a5,-28(s0)	# target_10, target
 # blinky.c:10:     while (*millis_addr < target) {
 	nop	
 .L2:
 # blinky.c:10:     while (*millis_addr < target) {
-	lw	a5,-24(s0)		# tmp146, millis_addr
-	lw	a5,0(a5)		# _2, *millis_addr_8
+	lw	a5,-24(s0)		# tmp145, millis_addr
+	lw	a5,0(a5)		# _2, *millis_addr_7
 # blinky.c:10:     while (*millis_addr < target) {
-	lw	a4,-28(s0)		# tmp147, target
-	bgt	a4,a5,.L2	#, tmp147, _2,
-# blinky.c:12:     *led_addr = !(*led_addr);
-	lw	a5,-20(s0)		# tmp148, led_addr
-	lw	a5,0(a5)		# _3, *led_addr_7
-# blinky.c:12:     *led_addr = !(*led_addr);
-	seqz	a5,a5	# tmp150, _3
-	andi	a5,a5,0xff	# _4, _4
-	mv	a4,a5	# _5, _4
-# blinky.c:12:     *led_addr = !(*led_addr);
-	lw	a5,-20(s0)		# tmp151, led_addr
-	sw	a4,0(a5)	# _5, *led_addr_7
+	lw	a4,-28(s0)		# tmp146, target
+	bgt	a4,a5,.L2	#, tmp146, _2,
+# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
+	lw	a5,-20(s0)		# tmp147, led_addr
+	lw	a5,0(a5)		# _3, *led_addr_6
+# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
+	bne	a5,zero,.L3	#, _3,,
+# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
+	li	a5,255		# iftmp.0_4,
+	j	.L4		#
+.L3:
+# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
+	li	a5,0		# iftmp.0_4,
+.L4:
+# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
+	lw	a4,-20(s0)		# tmp148, led_addr
+	sw	a5,0(a4)	# iftmp.0_4, *led_addr_6
 # blinky.c:9:     target = *millis_addr + BLINK_TIME;
-	j	.L3		#
+	j	.L5		#
 	.size	main, .-main
 	.ident	"GCC: (xPack GNU RISC-V Embedded GCC x86_64) 14.2.0"
 	.section	.note.GNU-stack,"",@progbits

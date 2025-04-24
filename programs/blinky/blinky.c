@@ -9,6 +9,6 @@ int main() {
     target = *millis_addr + BLINK_TIME;
     while (*millis_addr < target) {
     }
-    *led_addr = !(*led_addr);
+    *led_addr = *led_addr == 0 ? 255 : 0;
   }
 }

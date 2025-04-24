@@ -1,0 +1,6 @@
+riscv-none-elf-gcc -S -fverbose-asm -march=rv32i -nostdlib blinky.c
+riscv-none-elf-gcc -march=rv32i -nostdlib blinky.c -o blinky.elf
+../elf2hex/bin/riscv-none-elf-elf2hex --bit-width 32 --input blinky.elf --output blinky.txt
+python ../pad_0s.py blinky.txt
+python ../split_memhfile.py blinky.txt
+
