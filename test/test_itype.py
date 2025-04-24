@@ -34,9 +34,6 @@ async def run_itype_test(dut, inst, reg_index, expected):
     dut.SW.value = 1
 
     await RisingEdge(dut.clk)  # FETCH
-    await FallingEdge(dut.clk)
-    print(dut.reg0.register_file.value[11])
-    print(dut.reg0.register_file.value[12])
     await RisingEdge(dut.clk)  # DECODE
     await RisingEdge(dut.clk)  # EXEC_I
     await RisingEdge(dut.clk)  # ALU_WB

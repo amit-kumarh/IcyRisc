@@ -2,6 +2,7 @@ module fsm (
     input logic reset,
     input logic clk,
 
+    input logic [2:0] funct3,
     input logic [6:0] opcode,
 
     output logic branch,
@@ -41,7 +42,9 @@ module fsm (
 
     // misc
     BRANCH,
-    JUMP
+    JUMP,
+
+    STORE_COOLDOWN
   } fsm_state_t;
 
   logic branch_n;
@@ -92,7 +95,8 @@ module fsm (
       end
       EXEC_R, EXEC_I, EXEC_LUI, JUMP: next_state = ALU_WB;
       MEM_READ: next_state = MEM_WB;
-      MEM_WB, MEM_WRITE, ALU_WB, BRANCH: next_state = FETCH;
+      MEM_WRITE: next_state = STORE_COOLDOWN;
+      MEM_WB, STORE_COOLDOWN, ALU_WB, BRANCH: next_state = FETCH;
       default: ;
     endcase
   end
@@ -158,6 +162,9 @@ module fsm (
         mem_funct3_sel_n = MEM_FUNCT_DEFINED;
         mem_wren_n = 1;
       end
+      // HACK - throw in an extra state so mem_addr_in can revert to PC
+      // TODO: fix to use separate write/read addresses
+      STORE_COOLDOWN: ;
       MEM_WB: begin
         result_sel_n = MEM_RD;
         reg_wren_n   = 1;
@@ -167,10 +174,10 @@ module fsm (
         reg_wren_n   = 1;
       end
       BRANCH: begin
-        // Only supports BEQ...
         alu_src1_sel_n = RS1V;
         alu_src2_sel_n = RS2V;
-        alu_op_n = SUB_OP;
+        if (funct3[1] == 1) alu_op_n = SLTU_OP;
+        else alu_op_n = SLT_OP;
         branch_n = 1;
         result_sel_n = ALU_CLOCKED;
       end

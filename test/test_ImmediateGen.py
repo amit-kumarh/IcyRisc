@@ -60,7 +60,6 @@ def test_inst_register():
     sim = os.getenv("SIM", "icarus")
     proj_path = Path(__file__).resolve().parent
     sources = list((proj_path.parent / "src").glob("**/*.sv"))
-    print(sources)
     runner = get_runner(sim)
     runner.build(
         sources=sources,

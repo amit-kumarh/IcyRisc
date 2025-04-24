@@ -8,8 +8,6 @@ from cocotb.triggers import RisingEdge, FallingEdge
 from cocotb.types import Array
 from cocotb_tools.runner import get_runner
 
-from pprint import pprint
-
 from constants import *
 FUNCT3_WORD = 0b010
 FUNCT3_HALF = 0b001
@@ -63,11 +61,9 @@ async def run_store_test(dut, inst):
     await FallingEdge(dut.clk)
     print(f"Stored Data: 0x{int(dut.mem0.write_data.value):08X}")
     await RisingEdge(dut.clk)  # FETCH
-
-    # We don't check a register for store, we assume memory is updated
-    # For more thorough testing, you'd ideally have a way to read back from memory
-
     await FallingEdge(dut.clk)
+
+    # run a load_test afterword to confirm the store worked
 
 async def run_load_test(dut, inst, rd_index, expected_data):
     """Runs a single load instruction test."""
@@ -84,7 +80,6 @@ async def run_load_test(dut, inst, rd_index, expected_data):
     dut.inst.value = inst
     await RisingEdge(dut.clk)  # DECODE
     await RisingEdge(dut.clk)  # MEM_ADDR
-    await FallingEdge(dut.clk)  # MEM_ADDR
     await RisingEdge(dut.clk)  # MEM_LOAD
     await FallingEdge(dut.clk)
     print(f"Load Address: 0x{int(dut.mem0.read_address.value):08X}")
@@ -96,7 +91,7 @@ async def run_load_test(dut, inst, rd_index, expected_data):
     await FallingEdge(dut.clk)  # wait a bit so the last cycle registers
 
     actual_data = dut.reg0.register_file.value[rd_index]
-    # print(f"Got 0x{int(actual_data):08X}, Expected 0x{expected_data:08X}")
+    print(f"Got 0x{int(actual_data):08X}, Expected 0x{expected_data:08X}")
     assert actual_data == expected_data
 
 
@@ -167,7 +162,6 @@ async def test_sw(dut):
     await initialize_registers(dut, [rs1, rs2], [base_address, store_data])
     imm = offset
     inst = assemble_s_instruction(FUNCT3_WORD, rs1, rs2, imm)
-    print(hex(inst))
     await run_store_test(dut, inst)
 
     inst = assemble_i_instruction(OP_LOAD, FUNCT3_WORD, 16, rs1, imm)
@@ -186,11 +180,11 @@ async def test_sw_half(dut):
     inst = assemble_s_instruction(FUNCT3_HALF, rs1, rs2, imm)
     await run_store_test(dut, inst)
 
-    inst = assemble_i_instruction(OP_LOAD, 101, 16, rs1, imm)
+    inst = assemble_i_instruction(OP_LOAD, FUNCT3_HALF_UNSIGNED, 16, rs1, imm)
     await run_load_test(dut, inst, 16, store_data)
 
 @cocotb.test()
-async def test_sw_half(dut):
+async def test_sw_byte(dut):
     """Tests the Store Word (SW) instruction."""
     rs1 = 14
     rs2 = 15
@@ -199,10 +193,10 @@ async def test_sw_half(dut):
     store_data = 0xAB
     await initialize_registers(dut, [rs1, rs2], [base_address, store_data])
     imm = offset
-    inst = assemble_s_instruction(FUNCT3_HALF, rs1, rs2, imm)
+    inst = assemble_s_instruction(FUNCT3_BYTE, rs1, rs2, imm)
     await run_store_test(dut, inst)
 
-    inst = assemble_i_instruction(OP_LOAD, 101, 16, rs1, imm)
+    inst = assemble_i_instruction(OP_LOAD, FUNCT3_BYTE_UNSIGNED, 16, rs1, imm)
     await run_load_test(dut, inst, 16, store_data)
 
 @cocotb.test()

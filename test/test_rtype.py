@@ -41,7 +41,7 @@ async def run_rtype_test(dut, inst, rd_index, expected):
     await FallingEdge(dut.clk)  # wait a bit so the last cycle registers
 
     actual_result = dut.reg0.register_file.value[rd_index]
-    # print(f"Got {hex(actual_result)}, Expected {hex(expected)}")
+    print(f"Got {hex(actual_result)}, Expected {hex(expected)}")
     assert actual_result == expected
 
 @cocotb.test()

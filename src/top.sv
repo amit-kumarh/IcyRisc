@@ -31,7 +31,7 @@ module top (
 
   logic [31:0] imm_ext;
 
-  logic alu_zero;
+  alu_comp_t alu_comp;
   logic [31:0] alu_result;
 
   logic [31:0] result;
@@ -40,8 +40,9 @@ module top (
 
   control c0 (
       .reset(SW),
-      .clk  (clk),
-      .inst (inst),
+      .clk(clk),
+      .inst(inst),
+      .alu_comp(alu_comp),
 
       .pc_en(pc_en),
       .inst_en(inst_en),
@@ -70,7 +71,7 @@ module top (
       .ALU_ctrl(alu_ctrl),
 
       .ALU_result(alu_result),
-      .zero(alu_zero)
+      .ALU_comp  (alu_comp)
   );
 
   Register reg0 (
@@ -108,6 +109,7 @@ module top (
   );
 
   inst_register i0 (
+      .clk(clk),
       .pc(pc),
       .mem_rd(mem_rd),
       .inst_en(inst_en),

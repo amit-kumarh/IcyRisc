@@ -3,7 +3,7 @@ module control (
     input logic clk,
 
     input logic [31:0] inst,
-    input logic alu_zero,
+    input alu_comp_t alu_comp,
 
     // enables
     output logic pc_en,
@@ -24,6 +24,8 @@ module control (
 );
   alu_ops_t alu_op;
   logic pc_update;
+  logic branch;
+  logic branch_ctrl;
 
   alu_decoder ad0 (
       .alu_op(alu_op),
@@ -41,6 +43,7 @@ module control (
   fsm f0 (
       .reset(reset),
       .clk(clk),
+      .funct3(inst[14:12]),
       .opcode(inst[6:0]),
 
       .branch(branch),
@@ -56,7 +59,39 @@ module control (
       .alu_op(alu_op)
   );
 
-  assign pc_en = (branch && alu_zero) || pc_update;
+  branch_decoder b0 (
+      .branch  (branch),
+      .funct3  (inst[14:12]),
+      .alu_comp(alu_comp),
+
+      .branch_ctrl(branch_ctrl)
+  );
+
+  assign pc_en = branch_ctrl || pc_update;
+endmodule
+
+module branch_decoder (
+    input logic branch,
+    input logic [2:0] funct3,
+    input alu_comp_t alu_comp,
+
+    output logic branch_ctrl
+);
+
+  logic branch_cond;
+
+  always_comb begin
+    branch_cond = 0;
+    case (funct3)
+      BEQ: branch_cond = alu_comp == EQUAL;
+      BNE: branch_cond = alu_comp != EQUAL;
+      BLT, BLTU: branch_cond = alu_comp == LESS;
+      BGE, BGEU: branch_cond = alu_comp != LESS;
+      default: ;
+    endcase
+  end
+
+  assign branch_ctrl = branch && branch_cond;
 endmodule
 
 module alu_decoder (
@@ -84,6 +119,12 @@ module alu_decoder (
       end
       SRC2_OP: begin
         alu_ctrl = SRC2;
+      end
+      SLT_OP: begin
+        alu_ctrl = SLT;
+      end
+      SLTU_OP: begin
+        alu_ctrl = SLTU;
       end
       FUNCT_DEFINED: begin
         case (funct3)

@@ -41,7 +41,6 @@ async def run_jump_test(dut, inst, rd_index, expected_rd_value, expected_pc_offs
 
     await RisingEdge(dut.clk)  # FETCH
     await RisingEdge(dut.clk)  # DECODE
-    await FallingEdge(dut.clk)
     await RisingEdge(dut.clk)  # JUMP
     await RisingEdge(dut.clk)  # ALU_WB
     await RisingEdge(dut.clk)  # FETCH
@@ -67,7 +66,6 @@ async def test_jal(dut):
     rd = 1
     imm = 0x00000200  # Jump forward 512 bytes
     inst = assemble_jal_instruction(rd, imm)
-    print("INST", hex(inst))
     expected_rd_value = 4 # PC starts at 0, expect RA to be PC+4
     expected_pc_offset = imm
     await run_jump_test(dut, inst, rd, expected_rd_value & 0xFFFFFFFF, expected_pc_offset & 0xFFFFFFFF)
