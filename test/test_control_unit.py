@@ -116,6 +116,10 @@ async def test_sw(dut):
     assert dut.mem_addr_sel.value == ADDR_RESULT
     assert dut.mem_wren.value
 
+    # verify STORE_COOLDOWN
+    await FallingEdge(dut.clk)
+    assert dut.mem_addr_sel.value == ADDR_PC
+
     # back to FETCH
     await FallingEdge(dut.clk)
     assert dut.f0.state.value == FETCH
@@ -264,7 +268,7 @@ async def test_jal(dut):
 async def test_beq(dut):
     dut.reset.value = 0
     dut.inst.value = BEQ
-    dut.alu_zero.value = 1
+    dut.alu_comp.value = 1
     clock = Clock(dut.clk, 80, unit="ns")
     cocotb.start_soon(clock.start(start_high=False))
 
@@ -275,6 +279,7 @@ async def test_beq(dut):
     # start of FETCH
     await RisingEdge(dut.clk)
     await FallingEdge(dut.clk)
+
     # verify FETCH
     assert dut.f0.state.value == FETCH
     assert dut.mem_addr_sel.value == ADDR_PC
@@ -297,7 +302,7 @@ async def test_beq(dut):
     assert dut.f0.state.value == BRANCH
     assert dut.alu_src1_sel.value == RS1V
     assert dut.alu_src2_sel.value == RS2V
-    assert dut.alu_ctrl.value == SUB
+    assert dut.alu_ctrl.value == SLT
     assert dut.result_sel.value == ALU_CLOCKED
     assert dut.branch.value
     assert dut.pc_en.value
