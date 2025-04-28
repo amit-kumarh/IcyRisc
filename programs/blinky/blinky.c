@@ -1,14 +1,14 @@
-#define BLINK_TIME 10 // ms
+#define BLINK_TIME 10 // us
+#define LED_PTR ((volatile unsigned char *)0xFFFFFFFF)
+#define MICROS_PTR ((volatile unsigned int *)0xFFFFFFF4)
 
 int main() {
-  int *led_addr = (int *)0xFFFFFFFF;
-  int *millis_addr = (int *)0xFFFFFFF4;
   int target;
-  *led_addr = 1;
+  *LED_PTR = 255;
   while (1) {
-    target = *millis_addr + BLINK_TIME;
-    while (*millis_addr < target) {
+    target = *MICROS_PTR + BLINK_TIME;
+    while (*MICROS_PTR < target) {
     }
-    *led_addr = *led_addr == 0 ? 255 : 0;
+    *LED_PTR = *LED_PTR == 0 ? 255 : 0;
   }
 }

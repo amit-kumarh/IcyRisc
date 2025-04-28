@@ -17,48 +17,46 @@ main:
 	sw	ra,28(sp)	#,
 	sw	s0,24(sp)	#,
 	addi	s0,sp,32	#,,
-# blinky.c:4:   int *led_addr = (int *)0xFFFFFFFF;
-	li	a5,-1		# tmp139,
-	sw	a5,-20(s0)	# tmp139, led_addr
-# blinky.c:5:   int *millis_addr = (int *)0xFFFFFFF4;
-	li	a5,-12		# tmp140,
-	sw	a5,-24(s0)	# tmp140, millis_addr
-# blinky.c:7:   *led_addr = 1;
-	lw	a5,-20(s0)		# tmp141, led_addr
-	li	a4,1		# tmp142,
-	sw	a4,0(a5)	# tmp142, *led_addr_6
+# blinky.c:7:   *LED_PTR = 255;
+	li	a5,-1		# _1,
+# blinky.c:7:   *LED_PTR = 255;
+	li	a4,-1		# tmp146,
+	sb	a4,0(a5)	# tmp146, *_1
 .L5:
-# blinky.c:9:     target = *millis_addr + BLINK_TIME;
-	lw	a5,-24(s0)		# tmp143, millis_addr
-	lw	a5,0(a5)		# _1, *millis_addr_7
-# blinky.c:9:     target = *millis_addr + BLINK_TIME;
-	addi	a5,a5,10	#, target_10, _1
-	sw	a5,-28(s0)	# target_10, target
-# blinky.c:10:     while (*millis_addr < target) {
+# blinky.c:9:     target = *MICROS_PTR + BLINK_TIME;
+	li	a5,-12		# _2,
+	lw	a5,0(a5)		# _3, *_2
+# blinky.c:9:     target = *MICROS_PTR + BLINK_TIME;
+	addi	a5,a5,10	#, _4, _3
+# blinky.c:9:     target = *MICROS_PTR + BLINK_TIME;
+	sw	a5,-20(s0)	# _4, target
+# blinky.c:10:     while (*MICROS_PTR < target) {
 	nop	
 .L2:
-# blinky.c:10:     while (*millis_addr < target) {
-	lw	a5,-24(s0)		# tmp145, millis_addr
-	lw	a5,0(a5)		# _2, *millis_addr_7
-# blinky.c:10:     while (*millis_addr < target) {
-	lw	a4,-28(s0)		# tmp146, target
-	bgt	a4,a5,.L2	#, tmp146, _2,
-# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
-	lw	a5,-20(s0)		# tmp147, led_addr
-	lw	a5,0(a5)		# _3, *led_addr_6
-# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
-	bne	a5,zero,.L3	#, _3,,
-# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
-	li	a5,255		# iftmp.0_4,
+# blinky.c:10:     while (*MICROS_PTR < target) {
+	li	a5,-12		# _5,
+	lw	a4,0(a5)		# _6, *_5
+# blinky.c:10:     while (*MICROS_PTR < target) {
+	lw	a5,-20(s0)		# target.0_7, target
+	bltu	a4,a5,.L2	#, _6, target.0_7,
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	li	a5,-1		# _8,
+	lbu	a5,0(a5)	# tmp148, *_8
+	andi	a5,a5,0xff	# _9, tmp147
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	bne	a5,zero,.L3	#, _9,,
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	li	a5,255		# iftmp.1_11,
 	j	.L4		#
 .L3:
-# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
-	li	a5,0		# iftmp.0_4,
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	li	a5,0		# iftmp.1_11,
 .L4:
-# blinky.c:12:     *led_addr = *led_addr == 0 ? 255 : 0;
-	lw	a4,-20(s0)		# tmp148, led_addr
-	sw	a5,0(a4)	# iftmp.0_4, *led_addr_6
-# blinky.c:9:     target = *millis_addr + BLINK_TIME;
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	li	a4,-1		# _10,
+# blinky.c:12:     *LED_PTR = *LED_PTR == 0 ? 255 : 0;
+	sb	a5,0(a4)	# iftmp.1_11, *_10
+# blinky.c:9:     target = *MICROS_PTR + BLINK_TIME;
 	j	.L5		#
 	.size	main, .-main
 	.ident	"GCC: (xPack GNU RISC-V Embedded GCC x86_64) 14.2.0"
