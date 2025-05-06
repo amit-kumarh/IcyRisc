@@ -52,6 +52,7 @@ module memory #(
   logic read_word;
   logic read_half;
   logic read_unsigned;
+  logic mmio_op;
 
   // Declare variables to make iverilog stop yelling at us
   logic [15:0] read_value10;
@@ -144,7 +145,7 @@ module memory #(
   );
 
   // Handle memory reads
-  assign mem_read_enable = (read_address[31:13] == 19'd0);
+  assign mem_read_enable = (read_address[31:13] == 19'd0) && (!mmio_op);
   assign read_val = mem_read_enable ? { mem_read_data3, mem_read_data2, mem_read_data1, mem_read_data0 } : read_value;
 
   always_ff @(posedge clk) begin
@@ -155,6 +156,7 @@ module memory #(
     read_unsigned <= funct3[2];
 
     if (read_address[31:13] == 19'h7FFFF) begin
+      mmio_op <= 1;
       case (read_address[12:2])
         11'h7FF: read_value <= leds;
         11'h7FE: read_value <= millis;
@@ -163,6 +165,7 @@ module memory #(
       endcase
     end else begin
       read_value <= 32'd0;
+      mmio_op <= 0;
     end
   end
 
@@ -206,7 +209,7 @@ module memory #(
   end
 
   // Handme memory writes
-  assign mem_write_enable = (write_address[31:13] == 19'd0) & write_mem;
+  assign mem_write_enable = (write_address[31:13] == 19'd0) && write_mem && mmio_op;
 
   assign write_address0 = write_address[0];
   assign write_address1 = write_address[1];
