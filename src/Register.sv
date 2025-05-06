@@ -18,6 +18,7 @@ module Register (
 
   initial begin
     foreach (register_file[i]) register_file[i] = 32'b0;
+    register_file[2] = 32'h400;
   end
 
   //write data to wrtie data address when write enable is high (never overwrite r0 is hard 0)

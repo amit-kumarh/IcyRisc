@@ -95,8 +95,8 @@ module fsm (
       end
       EXEC_R, EXEC_I, EXEC_LUI, JUMP: next_state = ALU_WB;
       MEM_READ: next_state = MEM_WB;
-      MEM_WRITE: next_state = STORE_COOLDOWN;
-      MEM_WB, STORE_COOLDOWN, ALU_WB, BRANCH: next_state = FETCH;
+      BRANCH, MEM_WRITE: next_state = STORE_COOLDOWN;
+      MEM_WB, STORE_COOLDOWN, ALU_WB: next_state = FETCH;
       default: ;
     endcase
   end
@@ -118,7 +118,6 @@ module fsm (
 
     case (next_state)
       FETCH: begin
-        mem_addr_sel_n = ADDR_PC;
         inst_en_n = 1;
         alu_src1_sel_n = PC;
         alu_src2_sel_n = PC_INC;
@@ -163,7 +162,8 @@ module fsm (
         mem_wren_n = 1;
       end
       // HACK - throw in an extra state so mem_addr_in can revert to PC
-      // TODO: fix to use separate write/read addresses
+      // before FETCH after memory operations, or when PC changes on a
+      // BRANCH
       STORE_COOLDOWN: ;
       MEM_WB: begin
         result_sel_n = MEM_RD;

@@ -1,0 +1,27 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+BRAM             0x00000000         0x00001fff         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /tmp/cclwyh0c.o
+
+everything      0x00000000       0xb7
+                0x00000000                        . = ALIGN (0x4)
+ *(.*)
+ .text          0x00000000       0x68 /tmp/cclwyh0c.o
+                0x00000000                main
+ .data          0x00000068        0x0 /tmp/cclwyh0c.o
+ .bss           0x00000068        0x0 /tmp/cclwyh0c.o
+ .comment       0x00000068       0x33 /tmp/cclwyh0c.o
+                                 0x34 (size before relaxing)
+ .note.GNU-stack
+                0x0000009b        0x0 /tmp/cclwyh0c.o
+ .riscv.attributes
+                0x0000009b       0x1c /tmp/cclwyh0c.o
+OUTPUT(blinky.elf elf32-littleriscv)

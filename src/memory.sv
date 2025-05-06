@@ -209,7 +209,7 @@ module memory #(
   end
 
   // Handme memory writes
-  assign mem_write_enable = (write_address[31:13] == 19'd0) && write_mem && mmio_op;
+  assign mem_write_enable = (write_address[31:13] == 19'd0) && write_mem && (!mmio_op);
 
   assign write_address0 = write_address[0];
   assign write_address1 = write_address[1];

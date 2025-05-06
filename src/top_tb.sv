@@ -22,7 +22,7 @@ module top_tb;
     $dumpvars(0, top_tb);
     SW = 0;
     #8 SW = 1;
-    #3000 $finish;
+    #9000 $finish;
   end
 
 endmodule
